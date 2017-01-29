@@ -4,7 +4,7 @@ import java.util.Stack;
 
 
 public class MainGameLoop {
-	private final static boolean playWithJokers = true; // I always played this game with Jokers being able to take down Aces but no other card. I love that variant so I've included it as a feature.
+	private final static boolean playWithJokers = false; // I always played this game with Jokers being able to take down Aces but no other card. I love that variant so I've included it as a feature.
 	static Stack<Card> p1Deck = new Stack<Card>(); // Open to package for unit testing.
 	static Stack<Card> p2Deck = new Stack<Card>();
 	private static LinkedList<Card> p1Graveyard = new LinkedList<Card>();// I selected LinkedLists for the Graveyard for one-step shuffling: I perform random access+deletions on the graveyard to shuffle a graveyard back into a stack.
@@ -53,7 +53,7 @@ public class MainGameLoop {
 	}
 
 	static void gameLoop() {
-		while(true) { // Main Game Loop
+		while(p1Deck.size()+ p1Graveyard.size() > 0 && p2Deck.size() + p2Graveyard.size() > 0) { // Main Game Loop
 			Card p1Draw = p1Deck.pop(); // Pop cards
 			Card p2Draw = p2Deck.pop();
 			System.out.println("p1 draws " + p1Draw.toString());
@@ -153,6 +153,7 @@ public class MainGameLoop {
 			}// Maybe even take in a name?
 			else {
 				p1Deck = shuffle(p1Graveyard);
+				p1Graveyard = new LinkedList<Card>();
 			}
 		}
 		if(p2Deck.size() < 1) { // Checks for shuffles.
@@ -163,6 +164,7 @@ public class MainGameLoop {
 			}
 			else {
 				p2Deck = shuffle(p2Graveyard);
+				p2Graveyard = new LinkedList<Card>();
 			}
 		}
 	}

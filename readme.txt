@@ -1,0 +1,1 @@
+Hello, this project is written in Java and includes a runnable jar file for your convenience.  It can be compiled through any conventional Java method including the enclosed batch file.
