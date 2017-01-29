@@ -49,6 +49,8 @@ public class MainGameLoop {
 			p2Deck.push(shuffled.pop());
 		}
 		// Setup done.
+		System.out.println(p1Deck.size() + p1Graveyard.size());
+		System.out.println(p2Deck.size() + p2Graveyard.size());
 		gameLoop();
 	}
 
@@ -58,7 +60,7 @@ public class MainGameLoop {
 			Card p2Draw = p2Deck.pop();
 			System.out.println("p1 draws " + p1Draw.toString());
 			System.out.println("p2 draws " + p2Draw.toString());
-			int result = compareDraw(p1Draw, p2Draw);
+			int result = compareDraw(p1Draw, p2Draw, false);
 			if(result == 0) {
 				warBounty.push(p1Draw); // The two tied cards are added to the bounty.
 				warBounty.push(p2Draw);
@@ -70,7 +72,7 @@ public class MainGameLoop {
 
 	private static Stack<Card> warBounty = new Stack<Card>();
 
-	static void unlessOfCourse() { // Triggers a possible recursive war and handles result.
+	static void unlessOfCourse() { // Triggers a possibly recursive war and handles result.
 		if(warWereDeclared() == 1) {
 			while(!warBounty.empty()) {
 				Card c = warBounty.pop();
@@ -100,7 +102,7 @@ public class MainGameLoop {
 		System.out.println("p2 draws " + p2Draw.toString());
 		warBounty.push(p1Draw); // Takes from loser or grants to winner.
 		warBounty.push(p2Draw);
-		int result = compareDraw(p1Draw, p2Draw);
+		int result = compareDraw(p1Draw, p2Draw, true);
 		if(result == 1) { // Compare to opponent's card
 			System.out.println("p1 wins the war!");
 			return 1;
@@ -115,29 +117,37 @@ public class MainGameLoop {
 		}
 	}
 
-	static int compareDraw(Card p1Draw, Card p2Draw) {
+	static int compareDraw(Card p1Draw, Card p2Draw, boolean isWar) {
 		if(p1Draw.getValue() == 1 && p2Draw.getValue() == 14) {
 			System.out.println("p1 takes down an Ace!");
+			if(!isWar){
 			p1Graveyard.add(p1Draw); // Takes from loser or grants to winner.
 			p1Graveyard.add(p2Draw);
+			}
 			return 1;
 		}
 		else if(p2Draw.getValue() == 1 && p1Draw.getValue() == 14) {
 			System.out.println("p2 takes down an Ace!");
-			p2Graveyard.add(p1Draw); // Takes from loser or grants to winner.
-			p2Graveyard.add(p2Draw);
+			if(!isWar){
+				p2Graveyard.add(p1Draw); // Takes from loser or grants to winner.
+				p2Graveyard.add(p2Draw);
+				}
 			return 2;
 		}
 		else if(p1Draw.getValue() > p2Draw.getValue()) { // Compare to opponent's card, account for Ace Takedown in joker games.
 			System.out.println("p1 wins the draw!");
-			p1Graveyard.add(p1Draw); // Takes from loser or grants to winner.
-			p1Graveyard.add(p2Draw);
+			if(!isWar){
+				p1Graveyard.add(p1Draw); // Takes from loser or grants to winner.
+				p1Graveyard.add(p2Draw);
+				}
 			return 1;
 		}
 		else if(p2Draw.getValue() > p1Draw.getValue()) { // Compare to opponent's card
 			System.out.println("p2 wins the draw!");
-			p2Graveyard.add(p1Draw); // Takes from loser or grants to winner.
-			p2Graveyard.add(p2Draw);
+			if(!isWar){
+				p2Graveyard.add(p1Draw); // Takes from loser or grants to winner.
+				p2Graveyard.add(p2Draw);
+				}
 			return 2;
 		}
 		else
@@ -150,7 +160,7 @@ public class MainGameLoop {
 			if(p1Graveyard.size() < 1) { // Checks for game end.
 				System.out.println("Player 2 wins!");
 				System.exit(0);
-			}// Maybe even take in a name?
+			}
 			else {
 				p1Deck = shuffle(p1Graveyard);
 				p1Graveyard = new LinkedList<Card>();
