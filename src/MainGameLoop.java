@@ -49,8 +49,6 @@ public class MainGameLoop {
 			p2Deck.push(shuffled.pop());
 		}
 		// Setup done.
-		System.out.println(p1Deck.size() + p1Graveyard.size());
-		System.out.println(p2Deck.size() + p2Graveyard.size());
 		gameLoop();
 	}
 
